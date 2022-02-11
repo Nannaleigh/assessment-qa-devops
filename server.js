@@ -1,9 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const app = express()
 const {bots, playerRecord} = require('./data')
 const {shuffleArray} = require('./utils')
-require('dotenv')
+
 app.use(express.json())
 // Rollbar instructions
 var Rollbar = require("rollbar");
