@@ -5,10 +5,16 @@ const {bots, playerRecord} = require('./data')
 const {shuffleArray} = require('./utils')
 
 app.use(express.json())
-
+// Rollbar instructions
+var Rollbar = require("rollbar");
+var rollbar = new Rollbar({
+  accessToken: ROLLBAR_TOKEN,
+  captureUncaught: true,
+  captureUnhandledRejections: true
+});
 //middleware for html
 app.get("/", (req, res) => {
-    // rollbar.info("HTML served successfully");
+    rollbar.info("HTML served successfully");
     res.sendFile(path.join(__dirname, "/public/index.html"));
   });
   //middleware for css
@@ -24,8 +30,10 @@ app.get("/", (req, res) => {
 
 app.get('/api/robots', (req, res) => {
     try {
+        rollbar.info("bots loaded successfully");
         res.status(200).send(botsArr)
     } catch (error) {
+        rollbar.error("BOTS ARE NOT LOADING");
         console.log('ERROR GETTING BOTS', error)
         res.sendStatus(400)
     }
@@ -33,6 +41,7 @@ app.get('/api/robots', (req, res) => {
 
 app.get('/api/robots/five', (req, res) => {
     try {
+        rollbar.info("The five bots are ready")
         let shuffled = shuffleArray(bots)
         let choices = shuffled.slice(0, 5)
         let compDuo = shuffled.slice(6, 8)
